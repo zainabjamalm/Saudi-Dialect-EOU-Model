@@ -4,8 +4,8 @@ import torch
 from datasets import load_from_disk
 from transformers import AutoConfig, AutoTokenizer, AutoModelForSequenceClassification, TrainingArguments, Trainer
 from peft import LoraConfig, get_peft_model
-from utils.metrics import compute_metrics
-from utils.imbalance import compute_weights_from_labels
+from src.utils.metrics import compute_metrics
+from src.utils.imbalance import compute_weights_from_labels
 
 # Paths & hyperparams
 PROCESSED_PATH = "data/processed"
