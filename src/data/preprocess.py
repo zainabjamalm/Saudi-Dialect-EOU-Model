@@ -31,11 +31,9 @@ def preprocess_and_tokenize(save_path=PROCESSED_PATH, model_name=MODEL_NAME, max
     ds = ds.map(tokenize_fn, batched=True, remove_columns=[c for c in ds["train"].column_names if c not in ["label", "text_for_model"]])
     # Keep label and input_ids, attention_mask
     os.makedirs(save_path, exist_ok=True)
-
-    if os.path.exists(save_path):
-        shutil.rmtree(save_path)
-    ds.save_to_disk(save_path)  # overwrite processed tokenized dataset
-    print("Tokenized dataset saved to:", save_path)
+    save_path1 = str(save_path) + "_processed"
+    ds.save_to_disk(save_path1)  
+    print("Tokenized dataset saved to:", save_path1)
     return ds
 
 if __name__ == "__main__":
