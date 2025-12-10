@@ -27,7 +27,7 @@ class WeightedTrainer(Trainer):
         if class_weights is not None:
             self.class_weights_tensor = torch.tensor([class_weights.get(0,1.0), class_weights.get(1,1.0)], device=self.model.device, dtype=torch.float)
 
-    def compute_loss(self, model, inputs, return_outputs=False):
+    def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
         labels = inputs.get("labels")
         outputs = model(**inputs)
         logits = outputs.get("logits")
