@@ -96,8 +96,10 @@ def prepare_model_and_trainer():
 
 def main():
     trainer = prepare_model_and_trainer()
+    print("Start Training...")
     trainer.train()
     trainer.save_model("saved_models/eou_model/best")
+    print("Training has finished successfully.")
     print("Model saved to saved_models/eou_model/best")
 
 if __name__ == "__main__":
