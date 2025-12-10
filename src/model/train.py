@@ -63,11 +63,16 @@ def prepare_model_and_trainer():
         ex["labels"] = ex["label"]
         return ex
     ds = ds.map(rename_labels)
+    
+    # Remove the old "label" column to avoid conflicts
+    ds = ds.remove_columns(["label"])
+    
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
     print("Training on:", device)
-    # set format for pytorch
-    #ds.set_format(type="torch", columns=["input_ids", "attention_mask", "labels"])
+    
+    # set format for pytorch - only include required columns
+    ds.set_format(type="torch", columns=["input_ids", "attention_mask", "labels"])
 
     training_args = TrainingArguments(
     output_dir=OUT_DIR,
