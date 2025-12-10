@@ -1,107 +1,93 @@
 # Saudi Dialect EOU Model
 
-## Project Overview
+## Dataset
 
-This project aims to fine-tune transformer-based models to classify Saudi dialects in Arabic text. The dataset is curated to focus on specific dialects, and the training pipeline incorporates techniques like LoRA (Low-Rank Adaptation) to optimize training efficiency.
+### Overview
 
-## Models and Experiments
+The dataset used for this project focuses on Saudi dialects in Arabic text. It has been curated to ensure high-quality data for training and evaluation.
 
-### 1. AraBERT
+### Preprocessing
 
-- **Model**: `aubmindlab/bert-base-arabertv2`
-- **Training Time**: Approximately 25 minutes per epoch
-- **Results** (after 1 epoch):
+- Filtered to include only Saudi dialects.
+- Tokenized using the model tokenizer.
+- Saved in an efficient format for training.
 
-   ```text
-   {
-      'eval_loss': 0.16674670577049255,
-      'eval_accuracy': 0.9180535455861071,
-      'eval_precision': 0.9992522432701895,
-      'eval_recall': 0.8990805113254093,
-      'eval_f1': 0.946523432888679,
-      'eval_roc_auc': 0.9737775063561132,
-      'eval_runtime': 13.553,
-      'eval_samples_per_second': 407.88,
-      'eval_steps_per_second': 50.985,
-      'epoch': 1.0
-  }
-  ```
+### Class Imbalance Handling
 
-### 2. BERT Medium
+- Computed class weights to address imbalance.
+- Applied weighted loss during training.
 
-- **Model**: `bert-medium`
-- **Training Time**: Approximately half the time of AraBERT (~12.5 minutes per epoch)
-- **Results** (after 1 epoch):
+## Model
 
-  ```text
-  {
-  Epoch: 1
-  Training Loss: 0.254100
-  Validation Loss:  0.176551 
-  Accuracy:  0.919320
-  Precision:  0.997027 
-  Recall:   0.902669
-  F1: 0.947505   
-  }                                 
-  ```
+### Base Models
 
-## Key Changes and Optimizations
+1. **AraBERT**: `aubmindlab/bert-base-arabertv2`
+   - Training Time: ~25 minutes per epoch
+   - Accuracy: 91.8%
 
-### 1. LoRA Fine-Tuning
+2. **BERT Medium**: `asafaya/bert-medium-arabic`
+   - Training Time: ~14 minutes per epoch
+   - Accuracy: 91.8%
 
-- **Why**: LoRA reduces the number of trainable parameters, making training faster and more memory-efficient.
-- **How**: Applied LoRA to the attention layers of the model using the `peft` library.
+### LoRA Fine-Tuning
 
-### 2. Dataset Preprocessing
+- Reduced trainable parameters for efficiency.
+- Applied to attention layers using the `peft` library.
 
-- **Steps**:
-  1. Filtered the dataset to include only Saudi dialects.
-  2. Tokenized the text using the model tokenizer.
-  3. Saved the processed dataset for efficient loading.
-- **Why**: Ensures the dataset is clean, consistent, and ready for training.
+## Fine-Tuning
 
-### 3. Weighted Loss
+### Training Details
 
-- **Why**: To handle class imbalance in the dataset.
-- **How**: Computed class weights and applied them to the loss function during training.
+- Optimized hyperparameters for performance.
+- Used weighted loss to handle class imbalance.
+- Updated `WeightedTrainer` for compatibility with `transformers`.
 
-### 4. Compatibility Fixes
+### Results
 
-- Updated the `WeightedTrainer` class to handle additional arguments passed by newer versions of the `transformers` library.
-- Ensured the dataset columns align with the model's expected input format.
+- **AraBERT**: F1 Score: 94.7%
+- **BERT Medium**: F1 Score: 94.7% but faster
 
-## How to Run
+## Deployment
 
-1. **Install Dependencies**:
+### SDK Features
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+- Easy integration with LiveKit.
+- Real-time EOU detection.
+- Configurable thresholds and model variants.
 
-2. **Preprocess the Dataset**:
+### Quick Start
 
-   ```bash
-   python -m src.data.preprocess
-   ```
+```python
+from sdk import SaudiEOUModel
 
-3. **Train the Model**:
+model = SaudiEOUModel(model_name="asafaya/bert-medium-arabic")
+probability = model.predict_eou("السلام عليكم ورحمة الله")
+```
 
-   ```bash
-   python main.py
-   ```
+### LiveKit Integration
 
-4. **Evaluate the Model**:
+```python
+from sdk.livekit_integration import LiveKitTurnDetectionModule, EOUConfig
 
-   ```bash
-   python -m src.model.evaluate
-   ```
+config = EOUConfig(model_key="bert-medium", eou_threshold=0.6)
+detector = LiveKitTurnDetectionModule(config=config)
+result = detector.process_text("أنا جاهز")
+```
 
-## Future Work
+### Examples
 
-- Experiment with DistilBERT to compare training time and performance.
-- Explore other transformer architectures for further optimization.
-- Fine-tune hyperparameters to improve results.
+- `examples/livekit_example.py`: LiveKit integration.
+- `examples/evaluation.py`: Model evaluation.
+- `agent/agent.py`: Interactive demo.
+
+### Testing
+
+Run the evaluation suite:
+
+```bash
+python examples/evaluation.py
+```
 
 ---
 
-**Note**: Update this README with DistilBERT results once the experiment is complete.
+For more details, refer to the documentation files in the repository.

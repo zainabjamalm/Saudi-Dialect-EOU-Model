@@ -7,4 +7,5 @@ numpy
 tqdm
 sentencepiece
 tokenizers
+livekit-agents
 peft>=0.4.0

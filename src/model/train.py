@@ -10,7 +10,7 @@ from src.utils.imbalance import compute_weights_from_labels
 # Paths & hyperparams
 PROCESSED_PATH = "data/processed"
 MODEL_NAME = "asafaya/bert-medium-arabic"
-OUT_DIR = "saved_models/eou_model"
+OUT_DIR = "saved_model/eou_model"
 NUM_LABELS = 2
 
 def load_data(model_name=MODEL_NAME):
