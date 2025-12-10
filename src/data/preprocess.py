@@ -1,6 +1,6 @@
 from transformers import AutoTokenizer
 from datasets import load_from_disk
-import os
+import os, shutil
 
 MODEL_NAME = "aubmindlab/bert-base-arabertv2" 
 PROCESSED_PATH = "data/processed"
@@ -31,6 +31,9 @@ def preprocess_and_tokenize(save_path=PROCESSED_PATH, model_name=MODEL_NAME, max
     ds = ds.map(tokenize_fn, batched=True, remove_columns=[c for c in ds["train"].column_names if c not in ["label", "text_for_model"]])
     # Keep label and input_ids, attention_mask
     os.makedirs(save_path, exist_ok=True)
+
+    if os.path.exists(save_path):
+        shutil.rmtree(save_path)
     ds.save_to_disk(save_path)  # overwrite processed tokenized dataset
     print("Tokenized dataset saved to:", save_path)
     return ds
