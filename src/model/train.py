@@ -38,7 +38,7 @@ class WeightedTrainer(Trainer):
 def prepare_model_and_trainer():
     ds = load_data()
     # Extract all labels to compute weights
-    all_train_labels = np.array(ds["train"]["label"])
+    all_train_labels = np.array(ds["train"]["labels"])
     class_weights = compute_weights_from_labels(all_train_labels)
     print("Computed class weights:", class_weights)
 

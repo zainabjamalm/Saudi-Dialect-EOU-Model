@@ -1,6 +1,7 @@
 from transformers import AutoTokenizer
 from datasets import load_from_disk
-import os, shutil
+import os
+from load_data import load_and_filter
 
 MODEL_NAME = "aubmindlab/bert-base-arabertv2" 
 PROCESSED_PATH = "data/processed"
@@ -13,6 +14,11 @@ def get_text(example):
     return text
 
 def preprocess_and_tokenize(save_path=PROCESSED_PATH, model_name=MODEL_NAME, max_length=128):
+    # Check if processed data exists, if not load and filter it first
+    if not os.path.exists(save_path):
+        print(f"Directory {save_path} not found. Loading and filtering data first...")
+        load_and_filter("nihad-ask/arabic_eou_sada_curated", save_path=save_path)
+    
     print("Loading processed dataset from disk:", save_path)
     ds = load_from_disk(save_path)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
