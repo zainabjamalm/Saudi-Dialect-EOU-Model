@@ -8,7 +8,7 @@ from src.utils.metrics import compute_metrics
 from src.utils.imbalance import compute_weights_from_labels
 
 # Paths & hyperparams
-PROCESSED_PATH = "data/processed"
+PROCESSED_PATH = "data/processed_processed"  # Use the tokenized dataset
 MODEL_NAME = "aubmindlab/bert-base-arabertv2"
 OUT_DIR = "saved_models/eou_model"
 NUM_LABELS = 2
@@ -59,14 +59,7 @@ def prepare_model_and_trainer():
     model.print_trainable_parameters()
 
     # Make sure dataset features align with model inputs
-    def rename_labels(ex):
-        ex["labels"] = ex["label"]
-        return ex
-    ds = ds.map(rename_labels)
-    
-    # Remove the old "label" column to avoid conflicts
-    ds = ds.remove_columns(["label"])
-    
+    # Dataset should already have input_ids, attention_mask, and labels from preprocessing
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
     print("Training on:", device)

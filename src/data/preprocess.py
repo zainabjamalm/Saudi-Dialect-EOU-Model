@@ -29,7 +29,11 @@ def preprocess_and_tokenize(save_path=PROCESSED_PATH, model_name=MODEL_NAME, max
         return tokenizer(batch["text_for_model"], truncation=True, padding="max_length", max_length=max_length)
 
     ds = ds.map(tokenize_fn, batched=True, remove_columns=[c for c in ds["train"].column_names if c not in ["label", "text_for_model"]])
-    # Keep label and input_ids, attention_mask
+    # Remove text_for_model and keep only tokenized features
+    ds = ds.remove_columns(["text_for_model"])
+    # Rename label to labels for model compatibility
+    ds = ds.rename_column("label", "labels")
+    # Keep labels, input_ids, attention_mask
     os.makedirs(save_path, exist_ok=True)
     save_path1 = str(save_path) + "_processed"
     ds.save_to_disk(save_path1)  
