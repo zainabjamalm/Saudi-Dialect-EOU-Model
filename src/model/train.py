@@ -9,7 +9,7 @@ from src.utils.imbalance import compute_weights_from_labels
 
 # Paths & hyperparams
 PROCESSED_PATH = "data/processed_processed"  # Use the tokenized dataset
-MODEL_NAME = "aubmindlab/bert-base-arabertv2"
+MODEL_NAME = "asafaya/bert-medium-arabic"
 OUT_DIR = "saved_models/eou_model"
 NUM_LABELS = 2
 

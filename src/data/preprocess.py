@@ -3,7 +3,7 @@ from datasets import load_from_disk
 import os
 from src.data.load_data import load_and_filter
 
-MODEL_NAME = "aubmindlab/bert-base-arabertv2" 
+MODEL_NAME = "asafaya/bert-medium-arabic" 
 PROCESSED_PATH = "data/processed"
 
 def get_text(example):
