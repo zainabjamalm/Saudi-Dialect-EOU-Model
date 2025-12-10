@@ -27,11 +27,23 @@ This project aims to fine-tune transformer-based models to classify Saudi dialec
   }
   ```
 
-### 2. DistilBERT
+### 2. BERT Medium
 
-- **Model**: `bert-medium-arabic`
-- **Training Time**: TBD
-- **Results**: TBD
+- **Model**: `bert-medium`
+- **Training Time**: Approximately half the time of AraBERT (~12.5 minutes per epoch)
+- **Results** (after 1 epoch):
+
+  ```text
+  {
+  Epoch: 1
+  Training Loss: 0.254100
+  Validation Loss:  0.176551 
+  Accuracy:  0.919320
+  Precision:  0.997027 
+  Recall:   0.902669
+  F1: 0.947505   
+  }                                 
+  ```
 
 ## Key Changes and Optimizations
 

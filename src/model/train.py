@@ -8,15 +8,17 @@ from src.utils.metrics import compute_metrics
 from src.utils.imbalance import compute_weights_from_labels
 
 # Paths & hyperparams
-PROCESSED_PATH = "data/processed_processed"  # Use the tokenized dataset
+PROCESSED_PATH = "data/processed"
 MODEL_NAME = "asafaya/bert-medium-arabic"
 OUT_DIR = "saved_models/eou_model"
 NUM_LABELS = 2
 
-def load_data():
-    print("Loading dataset from:", PROCESSED_PATH)
-    ds = load_from_disk(PROCESSED_PATH)
-    # Expect ds to have tokenized fields like input_ids, attention_mask, and label
+def load_data(model_name=MODEL_NAME):
+    """Load tokenized dataset for the specific model."""
+    from src.data.preprocess import preprocess_and_tokenize
+    # Preprocess and tokenize if needed (uses cached version if available)
+    ds = preprocess_and_tokenize(save_path=PROCESSED_PATH, model_name=model_name)
+    print(f"Loaded dataset for model: {model_name}")
     return ds
 
 class WeightedTrainer(Trainer):
@@ -36,7 +38,7 @@ class WeightedTrainer(Trainer):
         return (loss, outputs) if return_outputs else loss
 
 def prepare_model_and_trainer():
-    ds = load_data()
+    ds = load_data(MODEL_NAME)
     # Extract all labels to compute weights
     all_train_labels = np.array(ds["train"]["labels"])
     class_weights = compute_weights_from_labels(all_train_labels)
