@@ -67,24 +67,23 @@ def prepare_model_and_trainer():
     model.to(device)
     print("Training on:", device)
     # set format for pytorch
-    ds.set_format(type="torch", columns=["input_ids", "attention_mask", "labels"])
+    #ds.set_format(type="torch", columns=["input_ids", "attention_mask", "labels"])
 
     training_args = TrainingArguments(
-        output_dir=OUT_DIR,
-        evaluation_strategy="epoch",
-        save_strategy="epoch",
-        logging_strategy="steps",
-        logging_steps=500,
-        per_device_train_batch_size=16,
-        per_device_eval_batch_size=32,
-        num_train_epochs=4,
-        learning_rate=2e-5,
-        load_best_model_at_end=True,
-        metric_for_best_model="f1",
-        greater_is_better=True,
-        fp16=True if torch.cuda.is_available() else False,
-    )
-
+    output_dir=OUT_DIR,
+    eval_strategy="epoch",
+    save_strategy="epoch",
+    learning_rate=2e-5,
+    per_device_train_batch_size=8,
+    per_device_eval_batch_size=8,
+    num_train_epochs=5,
+    load_best_model_at_end=True,
+    metric_for_best_model="f1",
+    report_to="none",
+    fp16=True,  
+    gradient_checkpointing=False,
+    label_names=["labels"],
+)
     trainer = WeightedTrainer(
         class_weights=class_weights,
         model=model,
@@ -98,6 +97,7 @@ def prepare_model_and_trainer():
 
 def main():
     trainer = prepare_model_and_trainer()
+    torch.utils.checkpoint.use_reentrant = False
     print("Start Training...")
     trainer.train()
     trainer.save_model("saved_models/eou_model/best")
