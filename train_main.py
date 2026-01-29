@@ -9,7 +9,7 @@ if __name__ == "__main__":
     load_and_filter("nihad-ask/arabic_eou_sada_curated", save_path="data/processed")
 
     # 2) preprocess & tokenize
-    preprocess_and_tokenize(save_path="data/processed", model_name="aubmindlab/bert-base-arabertv2", max_length=128)
+    preprocess_and_tokenize(save_path="data/processed", model_name="asafaya/bert-medium-arabic", max_length=128)
 
     # 3) run training
     train_main()

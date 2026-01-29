@@ -76,6 +76,21 @@ class SaudiEOUModel:
             proba = float(probs[0, 1].cpu().item())  # prob of label 1 (EOU)
         return proba
 
+    def is_end_of_utterance(self, text: str, threshold: float = None) -> bool:
+        """Convenience wrapper that returns True when predicted probability > threshold.
+
+        - text: transcript string
+        - threshold: optional overwrite for the decision threshold (default 0.5)
+        """
+        if threshold is None:
+            threshold = 0.5
+        try:
+            p = self.predict_proba(text)
+        except Exception as e:
+            print(f"[sdk] is_end_of_utterance error: {e}")
+            return False
+        return float(p) > float(threshold)
+
     def predict_batch(self, texts):
         """
         texts: list of strings
